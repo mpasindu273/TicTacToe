@@ -15,12 +15,8 @@ public class tic extends javax.swing.JFrame {
         initComponents();
     }
 
-public void validate_response(String turn)
-{
-    check_winner();
-    
-    if (turn.equals("player"))
-    {            
+public void player_response()
+{     
         if(arrplayerpos.contains(playerresponse) || arrcpupos.contains(playerresponse))  
         {
           JOptionPane.showMessageDialog(null, "This space is already occupated!"); 
@@ -30,29 +26,31 @@ public void validate_response(String turn)
           input = playerresponse;
           arrplayerpos.add(playerresponse);  
           display_response("X");
-          validate_response("cpu");
-        }
-    }
-    
-    else if (turn.equals("cpu"))
-    {            
-         while(true)
+          cpu_response();
+        }  
+}
+
+public void cpu_response()
+{       
+        check_winner();
+        while(true)
         {
-          cpuresponse = rand.nextInt(9)+1;
+          cpuresponse = rand.nextInt(9)+1;     
           
           if(arrplayerpos.contains(cpuresponse) || arrcpupos.contains(cpuresponse))
           {
             cpuresponse = rand.nextInt(9)+1; 
-          }                 
+          }       
+          
           else 
           {
             input = cpuresponse;
             arrcpupos.add(cpuresponse);            
             display_response("O");
-            break;  
+            break;             
           }
-        }           
-    }
+        }    
+        check_winner();
 } 
 
 public void display_response(String symbol)
@@ -108,7 +106,7 @@ public void check_winner()
     List<Integer>cross1 = Arrays.asList(3,5,7);
     List<Integer>cross2 = Arrays.asList(1,5,9);
     
-    List<List> winningpos = new ArrayList<List>();
+    List<List> winningpos = new ArrayList<>();
     
     winningpos.add(row1);
     winningpos.add(row2);
@@ -119,23 +117,25 @@ public void check_winner()
     winningpos.add(cross1);
     winningpos.add(cross2);
     
+    
     for(List l: winningpos){
       if(arrplayerpos.containsAll(l)){
         JOptionPane.showMessageDialog(null, "You won!");
-        restart();
+        reset();
       }
       else if(arrcpupos.containsAll(l)){
         JOptionPane.showMessageDialog(null, "Cpu won! Sorry!");
-        restart();
-      }
-      else if(arrplayerpos.size() + arrcpupos.size() == 9){
-        JOptionPane.showMessageDialog(null, "Draw!");
-        restart();
-      }
+        reset();
+      }   
     }
+    
+      if(arrplayerpos.size() + arrcpupos.size() == 9){
+        JOptionPane.showMessageDialog(null, "Draw!");
+        reset();
+      }
 }
 
-public void restart()
+public void reset()
 {
    s1.setText("");
    s2.setText("");
@@ -149,13 +149,14 @@ public void restart()
   
    arrplayerpos.clear();
    arrcpupos.clear();
+   playerresponse=0;
+   cpuresponse=0;
 }
 
 
 public void single_player()
 {
-    validate_response("player");
-    check_winner();
+    player_response();
 }
     
     @SuppressWarnings("unchecked")
@@ -286,7 +287,7 @@ public void single_player()
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
-        pack();
+        setBounds(0, 0, 317, 333);
     }// </editor-fold>//GEN-END:initComponents
 
     private void s1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_s1ActionPerformed
